@@ -25,12 +25,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void manageSplashScreen(bool isFirstLogin) async{
     Future.delayed(Duration(seconds: isFirstLogin ? 6 : 3), () {
       if(!mounted) return;
-      Navigator.pushReplacementNamed(context, '/register');
+      Navigator.pushReplacementNamed(context, '/login');
     },);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Image.asset('logo_placeholder.png'),);
+    return Center(child: Image.asset('assets/images/logo_placeholder.png'),);
   }
 }

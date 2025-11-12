@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vita_health/features/login/models/login_service.dart';
+import 'package:vita_health/features/login/viewmodels/login_state.dart';
 import 'package:vita_health/features/register/models/register_service.dart';
 import 'package:vita_health/features/register/viewmodels/register_state.dart';
 
@@ -9,3 +11,6 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) => throw Uni
 
 final registerServiceProvider = Provider<RegisterService>((ref) => RegisterServiceImpl(baseUrl: baseUrl));
 final registerNotifierProvider = NotifierProvider(() => RegisterNotifier(),);
+
+final loginServiceProvider = Provider<LoginService>((ref) => LoginServiceImpl(baseUrl: baseUrl),);
+final loginNotifierProvider = NotifierProvider(() => LoginNotifier(),);
