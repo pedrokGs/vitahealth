@@ -13,12 +13,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool? isFirstLogin = true;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    isFirstLogin = ref.watch(sharedPreferencesProvider).getBool('isFirstLogin');
+    final prefs = ref.read(sharedPreferencesProvider);
+    isFirstLogin = prefs.getBool('isFirstLogin') ?? true;
+    prefs.setBool('isFirstLogin', false);
 
-    Future.delayed(Duration(seconds: isFirstLogin == null ? 6 : 3), () {
-      Navigator.pushReplacementNamed(context, '/login');
+    manageSplashScreen(isFirstLogin!);
+  }
+
+  void manageSplashScreen(bool isFirstLogin) async{
+    Future.delayed(Duration(seconds: isFirstLogin ? 6 : 3), () {
+      if(!mounted) return;
+      Navigator.pushReplacementNamed(context, '/register');
     },);
   }
 
