@@ -11,9 +11,17 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   int count = 0;
+  bool isProfileCreated = false;
   final _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final senhaController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    bool? temp = ref.read(sharedPreferencesProvider).getBool('isProfileCreated');
+    isProfileCreated = temp??=false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +57,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           email: usernameController.text,
           password: senhaController.text,
         );
-
         if(state.errorMessage != null){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage.toString())));
+        } else{
+          ref.read(sharedPreferencesProvider).setBool('isProfileCreated', true);
+          if(!mounted) return;
+          Navigator.pushReplacementNamed(context, isProfileCreated ?  '/home' : '/profile');
         }
       }
     }

@@ -14,3 +14,4 @@ final registerNotifierProvider = NotifierProvider(() => RegisterNotifier(),);
 
 final loginServiceProvider = Provider<LoginService>((ref) => LoginServiceImpl(baseUrl: baseUrl),);
 final loginNotifierProvider = NotifierProvider(() => LoginNotifier(),);
+

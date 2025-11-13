@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vita_health/di/shared_providers.dart';
+import 'package:vita_health/features/home/views/home_screen.dart';
 import 'package:vita_health/features/login/views/login_screen.dart';
 import 'package:vita_health/features/register/views/register_screen.dart';
 import 'package:vita_health/features/splash_screen/views/splash_screen.dart';
+
+import 'features/profile/views/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,8 @@ class MyApp extends StatelessWidget {
         "/splash": (context) => SplashScreen(),
         "/register": (context) => RegisterScreen(),
         "/login": (context) => LoginScreen(),
+        "/profile": (context) => ProfileScreen(),
+        "/home": (context) => HomeScreen()
       },
     );
   }
