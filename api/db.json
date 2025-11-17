@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "id": "9597",
+      "email": "pedro@gmail.com",
+      "password": "Pedro123",
+      "celular": "123123",
+      "usuario": "pedropedropedro",
+      "foto": ""
+    }
+  ],
+  "trainingRoutine": [
+    {
+      "id": "12345",
+      "userId": "123",
+      "caminhada": {
+        "isActive": true,
+        "horario": "17:30",
+        "days": {
+          "sunday": false,
+          "monday": true,
+          "tuesday": false,
+          "wednesday": true,
+          "thursday": false,
+          "friday": true,
+          "saturday": false
+        }
+      },
+      "corrida": {
+        "isActive": false
+      },
+      "pularCorda": {
+        "isActive": false
+      }
+    }
+  ]
+}
