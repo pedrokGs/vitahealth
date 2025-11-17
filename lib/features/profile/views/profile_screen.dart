@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vita_health/di/shared_providers.dart';
+import 'package:vita_health/features/home/views/home_screen.dart';
+
+import '../../../shared/models/user.dart';
+import '../model/profile_model.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -12,14 +17,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final pesoController = TextEditingController();
   final alturaController = TextEditingController();
+
   DateTime dataNascimento = DateTime.now();
   double imcFinal = 0;
   String faixaImc = '';
 
+  // Caminhada
   bool isCaminhadaEnabled = false;
-  String horaCaminhada = "";
   final horaCaminhadaController = TextEditingController();
-  final Map<String, bool> caminhadaDays = {
+  Map<String, bool> caminhadaDays = {
     "Dom": false,
     "Seg": false,
     "Ter": false,
@@ -29,10 +35,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     "Sab": false,
   };
 
+  // Corrida
   bool isCorridaEnabled = false;
-  String horaCorrida = "";
   final horaCorridaController = TextEditingController();
-  final Map<String, bool> corridaDays = {
+  Map<String, bool> corridaDays = {
     "Dom": false,
     "Seg": false,
     "Ter": false,
@@ -42,10 +48,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     "Sab": false,
   };
 
+  // Pular Corda
   bool isPularCordaEnabled = false;
-  String horaPularCorda = "";
   final horaPularCordaController = TextEditingController();
-  final Map<String, bool> pularCordaDays = {
+  Map<String, bool> pularCordaDays = {
     "Dom": false,
     "Seg": false,
     "Ter": false,
@@ -56,158 +62,285 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   };
 
   void calculateIMC() {
-    final peso = double.parse(pesoController.text.trim());
-    final altura = double.parse(alturaController.text.trim());
+    final peso = double.tryParse(pesoController.text.trim()) ?? 0;
+    final altura = double.tryParse(alturaController.text.trim()) ?? 0;
 
-    imcFinal = peso / (altura * altura);
+    if (peso > 0 && altura > 0) {
+      imcFinal = peso / (altura * altura);
 
-    if (imcFinal < 18.5) {
-      faixaImc = "MAGREZA";
-    } else if (imcFinal < 24.9) {
-      faixaImc = "NORMAL";
-    } else if (imcFinal < 29.9) {
-      faixaImc = "SOBREPESO";
-    } else if (imcFinal < 39.9) {
-      faixaImc = "OBESIDADE";
-    }
-    if (imcFinal > 40.0) {
-      faixaImc = "OBESIDADE GRAVE";
+      if (imcFinal < 18.5)
+        faixaImc = "MAGREZA";
+      else if (imcFinal < 24.9)
+        faixaImc = "NORMAL";
+      else if (imcFinal < 29.9)
+        faixaImc = "SOBREPESO";
+      else if (imcFinal < 39.9)
+        faixaImc = "OBESIDADE";
+      else
+        faixaImc = "OBESIDADE GRAVE";
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(profileNotifierProvider);
+    final notifier = ref.read(profileNotifierProvider.notifier);
+
+    User? user = ref.watch(loginNotifierProvider).currentUser;
+    user ??= User(email: '', password: '', celular: '', usuario: '', foto: '');
+
     return Scaffold(
       appBar: AppBar(title: Text("Cadastro de perfil")),
 
       body: Padding(
-        padding: EdgeInsets.all(24.0),
-        child: Center(
+        padding: const EdgeInsets.all(24.0),
+        child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Seja Bem-Vindo(a)',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 24),
+
               Text(
-                "     Como esse é seu primeiro acesso, precisamos de mais algumas informações para continuar!",
+                "Como esse é seu primeiro acesso, precisamos de mais algumas informações para continuar!",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
+
+              const SizedBox(height: 24),
+
+              // FORM
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        dataNascimento = (await showDatePicker(
+                        final selected = await showDatePicker(
                           context: context,
                           firstDate: DateTime(1900),
                           lastDate: DateTime.now(),
-                        ))!;
-                        setState(() {});
+                        );
+                        if (selected != null) {
+                          setState(() => dataNascimento = selected);
+                        }
                       },
                       child: Text('Data de Nascimento'),
                     ),
+
                     Text(
-                      '${dataNascimento.day}/${dataNascimento.month}/${dataNascimento.year}',
+                      "${dataNascimento.day}/${dataNascimento.month}/${dataNascimento.year}",
                     ),
 
                     TextFormField(
                       controller: pesoController,
-                      decoration: InputDecoration(labelText: "Peso (em Kg)"),
-                      onChanged: (value) {
-                        setState(() {
-                          calculateIMC();
-                        });
-                      },
+                      decoration: InputDecoration(labelText: "Peso (Kg)"),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "O campo não pode ser vazio";
-                        }
-                        return null;
-                      },
+                      onChanged: (_) => setState(() => calculateIMC()),
                     ),
+
                     const SizedBox(height: 24),
+
                     TextFormField(
                       controller: alturaController,
-                      decoration: InputDecoration(
-                        labelText: "Altura (em metros)",
-                      ),
+                      decoration: InputDecoration(labelText: "Altura (m)"),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        setState(() {
-                          calculateIMC();
-                        });
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "O campo não pode ser vazio";
-                        }
-                        return null;
-                      },
+                      onChanged: (_) => setState(() => calculateIMC()),
                     ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 24),
+
               Text(
-                'Seu IMC é de ${imcFinal.toStringAsFixed(2)}, o que indica $faixaImc!',
+                'Seu IMC é ${imcFinal.toStringAsFixed(2)} — $faixaImc',
+                style: Theme.of(context).textTheme.titleMedium,
               ),
 
               const SizedBox(height: 48),
+
               Text(
-                'Treino Semanal',
+                "Treino Semanal",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+              const SizedBox(height: 12),
 
-              Row(
-                children: [
-                  Checkbox(
-                    value: isCaminhadaEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        isCaminhadaEnabled = value!;
-                      });
-                    },
-                  ),
-                  Text('Caminhada'),
-                  const SizedBox(width: 32),
-
-                  Expanded(
-                    child: TextField(
-                      onTap: () async {
-                        final data = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay(hour: 12, minute: 00),
-                        );
-                        horaCaminhadaController.text = data!.format(context);
-                      },
-                      controller: horaCaminhadaController,
-                      enabled: isCaminhadaEnabled,
-                      decoration: InputDecoration(labelText: "Horário"),
-                    ),
-                  ),
-                ],
+              // CAMINHADA
+              ExerciseSelector(
+                title: "Caminhada",
+                isEnabled: isCaminhadaEnabled,
+                onToggle: (v) => setState(() => isCaminhadaEnabled = v),
+                hourController: horaCaminhadaController,
+                daysMap: caminhadaDays,
+                onDayChanged: () => setState(() {}),
               ),
-              Row(
-                children: [
-                  Builder(builder: (context) {
-                    for(var day in caminhadaDays){
-                      return Column(
-                        children: [
-                          Checkbox(value: value, onChanged: onChanged)
-                        ],
+
+              const SizedBox(height: 24),
+
+              // CORRIDA
+              ExerciseSelector(
+                title: "Corrida",
+                isEnabled: isCorridaEnabled,
+                onToggle: (v) => setState(() => isCorridaEnabled = v),
+                hourController: horaCorridaController,
+                daysMap: corridaDays,
+                onDayChanged: () => setState(() {}),
+              ),
+
+              const SizedBox(height: 24),
+
+              // PULAR CORDA
+              ExerciseSelector(
+                title: "Pular Corda",
+                isEnabled: isPularCordaEnabled,
+                onToggle: (v) => setState(() => isPularCordaEnabled = v),
+                hourController: horaPularCordaController,
+                daysMap: pularCordaDays,
+                onDayChanged: () => setState(() {}),
+              ),
+
+              const SizedBox(height: 24),
+
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final hoje = DateTime.now();
+                    int idade = hoje.year - dataNascimento.year;
+
+                    if (hoje.month < dataNascimento.month ||
+                        (hoje.month == dataNascimento.month &&
+                            hoje.day < dataNascimento.day)) {
+                      idade--;
+                    }
+
+                    if (idade < 18) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Cadastro permitido somente para maiores de 18 anos.",
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
                       );
-                    },;
-                  },)
-                ],
-              )
+                      return;
+                    }
+
+                    Profile p = Profile(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      dataNascimento: dataNascimento,
+                      peso: double.parse(pesoController.text),
+                      altura: double.parse(alturaController.text),
+                      imc: imcFinal,
+                      faixaImc: faixaImc,
+                      caminhadaDays: caminhadaDays,
+                      horaCaminhada: horaCaminhadaController.text,
+                      corridaDays: corridaDays,
+                      horaCorrida: horaCorridaController.text,
+                      pularCordaDays: pularCordaDays,
+                      horaPularCorda: horaPularCordaController.text,
+                      userEmail: user!.email,
+                      nome: user.usuario,
+                    );
+
+                    await notifier.saveProfile(p);
+
+                    if (state.saved) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Perfil salvo com sucesso!")),
+                      );
+                    }
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  },
+                  child: state.isLoading
+                      ? CircularProgressIndicator()
+                      : Text("Salvar"),
+                ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class ExerciseSelector extends StatelessWidget {
+  final String title;
+  final bool isEnabled;
+  final Function(bool) onToggle;
+  final TextEditingController hourController;
+  final Map<String, bool> daysMap;
+  final VoidCallback onDayChanged;
+
+  ExerciseSelector({
+    required this.title,
+    required this.isEnabled,
+    required this.onToggle,
+    required this.hourController,
+    required this.daysMap,
+    required this.onDayChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Checkbox(value: isEnabled, onChanged: (v) => onToggle(v!)),
+            Text(title),
+            const SizedBox(width: 32),
+
+            Expanded(
+              child: TextField(
+                enabled: isEnabled,
+                controller: hourController,
+                readOnly: true,
+                decoration: const InputDecoration(labelText: "Horário"),
+                onTap: () async {
+                  final t = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay(hour: 12, minute: 0),
+                  );
+                  if (t != null) hourController.text = t.format(context);
+                },
+              ),
+            ),
+          ],
+        ),
+
+        if (isEnabled)
+          Column(
+            children: [
+              const SizedBox(height: 12),
+
+              Row(
+                children: daysMap.keys.map((dia) {
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        Checkbox(
+                          value: daysMap[dia]!,
+                          onChanged: (v) {
+                            daysMap[dia] = v!;
+                            onDayChanged();
+                          },
+                        ),
+                        Text(dia),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

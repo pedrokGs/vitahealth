@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:vita_health/shared/models/user.dart';
 
 abstract interface class LoginService {
-  Future<void> loginUser({required String email, required String password});
+  Future<User?> loginUser({required String email, required String password});
 }
 
 class LoginServiceImpl extends LoginService {
@@ -11,25 +12,29 @@ class LoginServiceImpl extends LoginService {
   LoginServiceImpl({required this.baseUrl});
 
   @override
-  Future<void> loginUser({
+  @override
+  Future<User?> loginUser({
     required String email,
     required String password,
   }) async {
     try {
       final response = await http.get(Uri.parse("$baseUrl/users"));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+
         for (var user in data) {
-          if (user["email"] == email || user["password"] == password) {
-            return;
+          if (user["usuario"] == email && user["password"] == password) {
+            return User.fromMap(user);
           }
-          throw Exception("Usuário/Senha inválidos");
         }
+        throw Exception("Usuário/Senha inválidos");
       } else {
         throw Exception("Erro desconhecido");
       }
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       rethrow;
     }
   }
+
 }

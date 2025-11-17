@@ -1,13 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vita_health/di/shared_providers.dart';
+import 'package:vita_health/shared/models/user.dart';
 import '../models/login_service.dart';
 
 class LoginState{
   final String? errorMessage;
   final bool isLoading;
   final bool isLocked;
+  final User? currentUser;
 
-  const LoginState({this.errorMessage, this.isLoading = false, this.isLocked = false});
+  const LoginState({this.errorMessage, this.isLoading = false, this.isLocked = false, this.currentUser});
 }
 
 class LoginNotifier extends Notifier<LoginState>{
@@ -25,8 +27,9 @@ class LoginNotifier extends Notifier<LoginState>{
     }
 
     try{
-      await loginService.loginUser(email: email, password: password);
-      state = LoginState(isLoading: false, errorMessage: null);
+      final user = await loginService.loginUser(email: email, password: password);
+      if(user == null) return;
+      state = LoginState(isLoading: false, errorMessage: null, currentUser: user);
     } catch(e){
       state = LoginState(isLoading: false, errorMessage: e.toString());
     }

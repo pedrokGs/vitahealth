@@ -19,8 +19,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    bool? temp = ref.read(sharedPreferencesProvider).getBool('isProfileCreated');
-    isProfileCreated = temp??=false;
+    bool? temp = ref
+        .read(sharedPreferencesProvider)
+        .getBool('isProfileCreated');
+    isProfileCreated = temp ??= false;
   }
 
   @override
@@ -29,23 +31,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final notifier = ref.watch(loginNotifierProvider.notifier);
 
     Future<void> timeout() async {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login bloqueado por 30 segundos')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login bloqueado por 30 segundos'), backgroundColor: Colors.red,),
+      );
       await Future.delayed(Duration(seconds: 30), () {
         print('timed out');
         notifier.unlock();
         count = 0;
-      },);
+      });
     }
 
     Future<void> login() async {
-      if(state.isLocked){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login bloqueado por 30 segundos')));
+      if (state.isLocked) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login bloqueado por 30 segundos'), backgroundColor: Colors.red,),
+        );
         return;
       }
 
       count += 1;
 
-      if(count >= 3){
+      if (count >= 3) {
         print('lockado');
         notifier.lock();
         timeout();
@@ -57,17 +63,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           email: usernameController.text,
           password: senhaController.text,
         );
-        if(state.errorMessage != null){
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage.toString())));
-        } else{
+        if (state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage.toString()), backgroundColor: Colors.red,),
+          );
+        } else {
           ref.read(sharedPreferencesProvider).setBool('isProfileCreated', true);
-          if(!mounted) return;
-          Navigator.pushReplacementNamed(context, isProfileCreated ?  '/home' : '/profile');
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(
+            context,
+            isProfileCreated ? '/home' : '/profile',
+          );
         }
       }
     }
-
-
 
     return Scaffold(
       body: Padding(
@@ -98,6 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextFormField(
                   controller: senhaController,
                   enabled: !state.isLocked,
+                  obscureText: true,
                   decoration: InputDecoration(labelText: "Senha"),
                   validator: (value) {
                     RegExp regExp = RegExp(
@@ -123,8 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Text('Cadastre-se'),
                 ),
 
-                const SizedBox(height: 24,),
-
+                const SizedBox(height: 24),
               ],
             ),
           ),

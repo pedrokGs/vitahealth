@@ -5,6 +5,9 @@ import 'package:vita_health/features/login/viewmodels/login_state.dart';
 import 'package:vita_health/features/register/models/register_service.dart';
 import 'package:vita_health/features/register/viewmodels/register_state.dart';
 
+import '../features/profile/model/profile_service.dart';
+import '../features/profile/viewmodel/profile_state.dart';
+
 final String baseUrl = 'http://10.0.2.2:3000';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) => throw UnimplementedError(),); // override na main
@@ -15,3 +18,9 @@ final registerNotifierProvider = NotifierProvider(() => RegisterNotifier(),);
 final loginServiceProvider = Provider<LoginService>((ref) => LoginServiceImpl(baseUrl: baseUrl),);
 final loginNotifierProvider = NotifierProvider(() => LoginNotifier(),);
 
+final profileNotifierProvider =
+NotifierProvider<ProfileNotifier, ProfileState>(ProfileNotifier.new);
+
+final profileServiceProvider = Provider<ProfileService>((ref) {
+  return ProfileServiceImpl(baseUrl: baseUrl);
+});

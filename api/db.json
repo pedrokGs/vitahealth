@@ -7,31 +7,160 @@
       "celular": "123123",
       "usuario": "pedropedropedro",
       "foto": ""
+    },
+    {
+      "id": "f513",
+      "email": "pedro@gmail.com",
+      "password": "Pedro123",
+      "celular": "123123123123123",
+      "usuario": "pedro123123",
+      "foto": ""
+    },
+    {
+      "id": "e36e",
+      "email": "pedibr5@gmail.com",
+      "password": "Pedro123",
+      "celular": "123123123213213",
+      "usuario": "pedrinho",
+      "foto": ""
+    },
+    {
+      "id": "110c",
+      "email": "pedro@gmail.com",
+      "password": "Pedro123",
+      "celular": "12312312312",
+      "usuario": "pedro223",
+      "foto": ""
+    },
+    {
+      "id": "b95e",
+      "email": "pedrocasinha@gmail.com",
+      "password": "Pedro123",
+      "celular": "pedro123",
+      "usuario": "pedrocasinha",
+      "foto": "/data/user/0/com.example.vita_health/app_flutter/2025-11-17 19:35:36.922971.png"
     }
   ],
-  "trainingRoutine": [
+  "profile": [
     {
-      "id": "12345",
-      "userId": "123",
-      "caminhada": {
-        "isActive": true,
-        "horario": "17:30",
-        "days": {
-          "sunday": false,
-          "monday": true,
-          "tuesday": false,
-          "wednesday": true,
-          "thursday": false,
-          "friday": true,
-          "saturday": false
-        }
+      "id": "1763408451358",
+      "userEmail": "pedro@gmail.com",
+      "nome": "pedropedropedro",
+      "dataNascimento": "2005-11-11T00:00:00.000",
+      "peso": 50,
+      "altura": 1.5,
+      "imc": 22.22222222222222,
+      "faixaImc": "NORMAL",
+      "caminhadaDays": {
+        "Dom": true,
+        "Seg": true,
+        "Ter": true,
+        "Qua": false,
+        "Qui": true,
+        "Sex": false,
+        "Sab": false
       },
-      "corrida": {
-        "isActive": false
+      "horaCaminhada": "12:00 PM",
+      "corridaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": true,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
       },
-      "pularCorda": {
-        "isActive": false
-      }
+      "horaCorrida": "2:00 PM",
+      "pularCordaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": true,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaPularCorda": "2:00 PM"
+    },
+    {
+      "id": "1763408515253",
+      "userEmail": "pedro@gmail.com",
+      "nome": "pedropedropedro",
+      "dataNascimento": "2005-11-11T00:00:00.000",
+      "peso": 50,
+      "altura": 1.5,
+      "imc": 22.22222222222222,
+      "faixaImc": "NORMAL",
+      "caminhadaDays": {
+        "Dom": true,
+        "Seg": true,
+        "Ter": true,
+        "Qua": false,
+        "Qui": true,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaCaminhada": "12:00 PM",
+      "corridaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": true,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaCorrida": "2:00 PM",
+      "pularCordaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": true,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaPularCorda": "2:00 PM"
+    },
+    {
+      "id": "1763408765290",
+      "userEmail": "pedrocasinha@gmail.com",
+      "nome": "pedrocasinha",
+      "dataNascimento": "2006-10-01T00:00:00.000",
+      "peso": 55,
+      "altura": 1.73,
+      "imc": 18.376825152861773,
+      "faixaImc": "MAGREZA",
+      "caminhadaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": true,
+        "Qua": false,
+        "Qui": true,
+        "Sex": true,
+        "Sab": false
+      },
+      "horaCaminhada": "5:00 PM",
+      "corridaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaCorrida": "",
+      "pularCordaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaPularCorda": ""
     }
   ]
 }

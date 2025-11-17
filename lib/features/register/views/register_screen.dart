@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vita_health/di/shared_providers.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vita_health/shared/models/user.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -12,12 +15,32 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final celularController = TextEditingController();
   final usernameController = TextEditingController();
   final senhaController = TextEditingController();
   final confirmaSenhaController = TextEditingController();
+
+  File? userPhoto;
+
+  Future<void> pickPhoto() async {
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image == null) return;
+
+    final directory = await getApplicationDocumentsDirectory();
+    final String path = "${directory.path}/${DateTime.now()}.png";
+
+    final File savedImage = await File(image.path).copy(path);
+
+    setState(() {
+      userPhoto = savedImage;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,37 +49,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     Future<void> register() async {
       if (senhaController.text != confirmaSenhaController.text) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('As senhas não coincidem')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('As senhas não coincidem')),
+        );
+        return;
       }
+
       if (_formKey.currentState!.validate()) {
-          final User user = User(
-            email: emailController.text,
-            password: senhaController.text,
-            celular: celularController.text,
-            usuario: usernameController.text,
-            foto: '',
+        final User user = User(
+          email: emailController.text,
+          password: senhaController.text,
+          celular: celularController.text,
+          usuario: usernameController.text,
+          foto: userPhoto?.path ?? '',
+        );
+
+        await notifier.register(user: user);
+
+        if (!mounted) return;
+
+        if (state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage!)),
           );
-          await notifier.register(user: user);
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/login');
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Dados salvos com sucesso')));
-          if(state.errorMessage != null){
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? "Ocorreu um erro inesperado"),
-              ),
-            );
-          }
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cadastro realizado com sucesso')),
+        );
+
+        Navigator.pushReplacementNamed(context, '/login');
       }
     }
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
         title: Text('Cadastro de Usuário'),
       ),
 
@@ -66,9 +94,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const SizedBox(height: 100),
+
+                // FOTO DO USUÁRIO
+                GestureDetector(
+                  onTap: pickPhoto,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage:
+                    userPhoto != null ? FileImage(userPhoto!) : null,
+                    child: userPhoto == null
+                        ? Icon(Icons.camera_alt, size: 40, color: Colors.white70)
+                        : null,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
                 TextFormField(
                   controller: nomeController,
                   decoration: InputDecoration(labelText: "Nome"),
@@ -81,6 +123,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
+
                 TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(labelText: "Email"),
@@ -93,18 +136,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
+
                 TextFormField(
                   controller: celularController,
                   decoration: InputDecoration(labelText: "Celular"),
                   keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'O campo é obrigatório!';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                  value!.isEmpty ? 'O campo é obrigatório!' : null,
                 ),
                 const SizedBox(height: 24),
+
                 TextFormField(
                   controller: usernameController,
                   decoration: InputDecoration(labelText: "Usuário"),
@@ -119,8 +160,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
+
                 TextFormField(
                   controller: senhaController,
+                  obscureText: true,
                   decoration: InputDecoration(labelText: "Senha"),
                   validator: (value) {
                     RegExp regExp = RegExp(
@@ -133,15 +176,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
+
                 TextFormField(
                   controller: confirmaSenhaController,
+                  obscureText: true,
                   decoration: InputDecoration(labelText: "Confirma Senha"),
                   validator: (value) {
-                    RegExp regExp = RegExp(
-                      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z0-9]{8,}$',
-                    );
-                    if (!regExp.hasMatch(value!)) {
-                      return 'A senha não é válida';
+                    if (value != senhaController.text) {
+                      return 'As senhas não coincidem';
                     }
                     return null;
                   },
@@ -150,16 +192,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: 48),
 
                 ElevatedButton(
-                  onPressed: () => register(),
+                  onPressed: state.isLoading ? null : register,
                   child: state.isLoading
                       ? CircularProgressIndicator()
                       : Text('Cadastrar'),
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: state.isLoading
-                      ? CircularProgressIndicator()
-                      : Text('Cancelar'),
+                  child: Text('Cancelar'),
                 ),
               ],
             ),
