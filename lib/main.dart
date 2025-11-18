@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vita_health/configs/app_router.dart';
 import 'package:vita_health/di/shared_providers.dart';
 import 'package:vita_health/features/home/views/home_screen.dart';
 import 'package:vita_health/features/login/views/login_screen.dart';
@@ -25,19 +26,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/splash',
-      routes: {
-        "/splash": (context) => SplashScreen(),
-        "/register": (context) => RegisterScreen(),
-        "/login": (context) => LoginScreen(),
-        "/profile": (context) => ProfileScreen(),
-        "/home": (context) => HomeScreen()
-      },
+      routerConfig: router,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vita_health/di/shared_providers.dart';
 import 'package:path_provider/path_provider.dart';
@@ -79,13 +80,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           SnackBar(content: Text('Cadastro realizado com sucesso')),
         );
 
-        Navigator.pushReplacementNamed(context, '/login');
+        context.goNamed('/login');
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Usuário'),
+        leading: BackButton(onPressed: () => context.pop(),),
       ),
 
       body: SingleChildScrollView(
@@ -198,7 +200,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       : Text('Cadastrar'),
                 ),
                 ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => context.pop(),
                   child: Text('Cancelar'),
                 ),
               ],

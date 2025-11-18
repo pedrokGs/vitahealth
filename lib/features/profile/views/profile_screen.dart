@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vita_health/di/shared_providers.dart';
 import 'package:vita_health/features/home/views/home_screen.dart';
 
@@ -252,10 +253,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         SnackBar(content: Text("Perfil salvo com sucesso!")),
                       );
                     }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    );
+                    context.go('/home');
                   },
                   child: state.isLoading
                       ? CircularProgressIndicator()

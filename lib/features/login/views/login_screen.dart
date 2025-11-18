@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vita_health/di/shared_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -70,10 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         } else {
           ref.read(sharedPreferencesProvider).setBool('isProfileCreated', true);
           if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            isProfileCreated ? '/home' : '/profile',
-          );
+          context.go(isProfileCreated ? '/home' : '/profile');
         }
       }
     }
@@ -129,7 +127,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/register'),
+                  onPressed: () => context.go('/register'),
                   child: Text('Cadastre-se'),
                 ),
 

@@ -1,0 +1,1 @@
+enum ExerciseType {corrida, caminhada, pularCorda}

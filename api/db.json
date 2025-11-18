@@ -161,6 +161,55 @@
         "Sab": false
       },
       "horaPularCorda": ""
+    },
+    {
+      "id": "1763491856421",
+      "userEmail": "pedrocasinha@gmail.com",
+      "nome": "pedrocasinha",
+      "dataNascimento": "2005-11-08T00:00:00.000",
+      "peso": 23,
+      "altura": 23,
+      "imc": 0.043478260869565216,
+      "faixaImc": "MAGREZA",
+      "caminhadaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaCaminhada": "",
+      "corridaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaCorrida": "",
+      "pularCordaDays": {
+        "Dom": false,
+        "Seg": false,
+        "Ter": false,
+        "Qua": false,
+        "Qui": false,
+        "Sex": false,
+        "Sab": false
+      },
+      "horaPularCorda": ""
+    }
+  ],
+  "monitoramento": [
+    {
+      "id": "5b95",
+      "userId": "pedrocasinha",
+      "totalDistance": 218.03799177447337,
+      "totalTime": "00:00:57",
+      "createdAt": "2025-11-18T18:52:17.578694"
     }
   ]
 }

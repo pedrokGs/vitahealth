@@ -2,9 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vita_health/features/login/models/login_service.dart';
 import 'package:vita_health/features/login/viewmodels/login_state.dart';
+import 'package:vita_health/features/monitoramento/viewmodel/monitoramento_state.dart';
 import 'package:vita_health/features/register/models/register_service.dart';
 import 'package:vita_health/features/register/viewmodels/register_state.dart';
 
+import '../features/monitoramento/service/monitoramento_service.dart';
 import '../features/profile/model/profile_service.dart';
 import '../features/profile/viewmodel/profile_state.dart';
 
@@ -23,4 +25,10 @@ NotifierProvider<ProfileNotifier, ProfileState>(ProfileNotifier.new);
 
 final profileServiceProvider = Provider<ProfileService>((ref) {
   return ProfileServiceImpl(baseUrl: baseUrl);
+});
+
+final monitoringProvider = NotifierProvider(() => MonitoramentoStateNotifier(),);
+
+final monitoramentoServiceProvider = Provider<MonitoramentoService>((ref) {
+  return MonitoramentoService(baseUrl: baseUrl);
 });

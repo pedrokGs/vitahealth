@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vita_health/di/shared_providers.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -25,7 +26,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void manageSplashScreen(bool isFirstLogin) async{
     Future.delayed(Duration(seconds: isFirstLogin ? 6 : 3), () {
       if(!mounted) return;
-      Navigator.pushReplacementNamed(context, '/login');
+      context.go('/login');
     },);
   }
 

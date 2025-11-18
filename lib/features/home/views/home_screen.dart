@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vita_health/di/shared_providers.dart';
 import 'package:vita_health/shared/models/user.dart';
 
@@ -60,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
               leading: Icon(Icons.fitness_center),
               title: Text("Exercícios"),
               onTap: () {
-
+                context.goNamed('selecionar');
               },
             ),
 
@@ -96,7 +97,7 @@ class HomeScreen extends ConsumerWidget {
                 style: TextStyle(color: Colors.red),
               ),
               onTap: () {
-                Navigator.pushReplacementNamed(context, "/login");
+                context.go('/login');
               },
             ),
           ],
